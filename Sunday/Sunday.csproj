@@ -4,6 +4,10 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
@@ -20,6 +24,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Sunday.Api\Sunday.Api.csproj" />
       <ProjectReference Include="..\Sunday.Application\Sunday.Application.csproj" />
+      <ProjectReference Include="..\Sunday.Data\Sunday.Data.csproj" />
     </ItemGroup>
 
 </Project>

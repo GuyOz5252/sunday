@@ -1,44 +1,23 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Sunday.Api.Endpoints.Auth;
+using Sunday.Data;
 using Sunday.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-            ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_AUDIENCE")!)),
-        };
-    })
-    .AddGoogle(options =>
-    {
-        // TODO: Exceptions
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new Exception();
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? throw new Exception();
-    });
+builder.AddAuthentication();
+builder.AddAuthorization();
 
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Bearer", policy => policy.RequireAuthenticatedUser()
-        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme))
-    .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
-    .AddPolicy("User", policy => policy.RequireRole("User"));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("postgres"), optionBuilder =>
+    {
+        optionBuilder.MigrationsAssembly(Assembly.GetExecutingAssembly());
+    });
+});
 
 builder.Services.AddEndpoints(typeof(LoginWithGoogleEndpoint).Assembly);
 
