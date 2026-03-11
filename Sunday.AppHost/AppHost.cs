@@ -1,5 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Sunday>("booking");
+builder.AddProject<Projects.Sunday>("sunday");
 
 await builder.Build().RunAsync();
