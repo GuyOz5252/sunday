@@ -1,0 +1,12 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <UserSecretsId>501f57e4-dec4-4769-895a-92fcd5cab203</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Sunday\Sunday.csproj" />
+    </ItemGroup>
+
+</Project>

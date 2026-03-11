@@ -1,0 +1,19 @@
+<Solution>
+    <Folder Name="/aspire/">
+        <Project Path="Sunday.AppHost/Sunday.AppHost.csproj" />
+    </Folder>
+    <Folder Name="/Solution Items/">
+        <File Path=".editorconfig" />
+        <File Path=".gitignore" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+        <File Path="README.md" />
+    </Folder>
+    <Folder Name="/src/">
+        <Project Path="Sunday.Api/Sunday.Api.csproj" />
+        <Project Path="Sunday.Application/Sunday.Application.csproj" />
+        <Project Path="Sunday.Core/Sunday.Core.csproj" />
+        <Project Path="Sunday.Data/Sunday.Data.csproj" />
+        <Project Path="Sunday/Sunday.csproj" />
+    </Folder>
+</Solution>
