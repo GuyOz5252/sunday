@@ -2,7 +2,6 @@
 
 public class BoardMember
 {
-    public string UserId { get; init; }
-    public string BoardId { get; init; }
-    public BoardMemberRole Role { get; init; }
+    public required string UserId { get; init; }
+    public required BoardMemberRole Role { get; init; }
 }
