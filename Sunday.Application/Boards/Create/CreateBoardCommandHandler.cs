@@ -33,7 +33,7 @@ public class CreateBoardCommandHandler : ICommandHandler<CreateBoardCommand, str
         await _boardRepository.CreateBoardAsync(board, cancellationToken);
         var result = await _unitOfWork.CommitAsync(cancellationToken);
         return result.IsFailure
-            ? new Error("", "", "")
-            : Result<string>.Success(board.Id);
+            ? result.Error
+            : Result.Success(board.Id);
     }
 }
