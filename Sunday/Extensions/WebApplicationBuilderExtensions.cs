@@ -1,6 +1,8 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Sunday.Api.Authorization;
 
 namespace Sunday.Extensions;
 
@@ -31,7 +33,6 @@ public static class WebApplicationBuilderExtensions
                 })
                 .AddGoogle(options =>
                 {
-                    // TODO: Exceptions
                     options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new Exception();
                     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
                                            throw new Exception();
@@ -40,11 +41,20 @@ public static class WebApplicationBuilderExtensions
 
         public void AddAuthorization()
         {
+            builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            builder.Services.AddSingleton<IAuthorizationHandler, TicketAccessHandler>();
+
             builder.Services.AddAuthorizationBuilder()
                 .AddPolicy("Bearer", policy => policy.RequireAuthenticatedUser()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme))
-                .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
-                .AddPolicy("User", policy => policy.RequireRole("User"));
+                .AddPolicy("Admin", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin"))
+                .AddPolicy("SystemAdmin", policy => policy.RequireRole("SystemAdmin"))
+                .AddPolicy("AgencyAdmin", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin"))
+                .AddPolicy("TrafficManager", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin", "TrafficManager"))
+                .AddPolicy("CreativeManager", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin", "CreativeManager"))
+                .AddPolicy("AccountManager", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin", "AccountManager"))
+                .AddPolicy("CreateTicket", policy => policy.RequireRole("SystemAdmin", "AgencyAdmin", "TrafficManager", "AccountManager"))
+                .AddPolicy("TicketAccess", policy => policy.AddRequirements(new TicketAccessRequirement()));
         }
     }
 }

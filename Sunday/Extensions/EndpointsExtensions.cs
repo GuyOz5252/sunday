@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sunday.Api.Endpoints.Abstract;
+using Sunday.Api.Endpoints.Abstracts;
 
 namespace Sunday.Extensions;
 

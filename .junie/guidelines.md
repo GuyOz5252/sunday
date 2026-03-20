@@ -1,0 +1,12 @@
+- as a best practice have 1 class/interface per file
+  - exceptions for example request and response records in an endpoint class
+- use the same name as the type
+- package names are usually in plural form
+  - for example: in a use case Boards, the Create folder can be not plural
+- always use {} for blocks
+- do not use primary constructors, unless in a record and no functionality is lost
+- avoid comments in code unless absolutely necessary
+- use the Result pattern. do not use domain exceptions
+- ICommandHandler.cs file can have the 2 implementation of ICommandHandler (one with result type arg and one without) in the same file, and so can ICommand
+- Decorate ICommandHandler with the Scrutor nuget package
+- commands and records in general can use primary constructors
