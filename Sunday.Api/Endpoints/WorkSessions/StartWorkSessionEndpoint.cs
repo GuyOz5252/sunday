@@ -7,7 +7,6 @@ using Sunday.Api.Endpoints.Abstracts;
 using Sunday.Application.Abstracts;
 using Sunday.Application.WorkSessions.Start;
 using Sunday.Core.Abstracts;
-using Sunday.Core.DomainEvents;
 
 namespace Sunday.Api.Endpoints.WorkSessions;
 
@@ -45,12 +44,9 @@ public class StartWorkSessionEndpoint : IEndpoint
             var command = new StartWorkSessionCommand(ticketId, userId, request.Description);
             var result = await handler.HandleAsync(command);
 
-            if (result.IsFailure)
-            {
-                return Results.BadRequest(result.Error);
-            }
-
-            return Results.Created($"/work-sessions/{result.Value}", result.Value);
+            return result.IsFailure 
+                ? Results.BadRequest(result.Error)
+                : Results.Created($"/work-sessions/{result.Value}", result.Value);
         })
         .WithName("StartWorkSession")
         .WithTags("WorkSessions")

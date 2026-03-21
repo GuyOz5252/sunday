@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Sunday.Api.Authorization;
 using Sunday.Api.Endpoints.Abstracts;
 using Sunday.Application.Abstracts;
 using Sunday.Application.Tickets.UpdateStatus;
 using Sunday.Core.Abstracts;
-using Sunday.Core.DomainEvents;
 using Sunday.Core.Models;
 
 namespace Sunday.Api.Endpoints.Tickets;
@@ -52,12 +50,7 @@ public class UpdateTicketStatusEndpoint : IEndpoint
                 request.NextAssigneeId);
 
             var result = await handler.HandleAsync(command);
-            if (result.IsFailure)
-            {
-                return Results.BadRequest(result.Error);
-            }
-
-            return Results.NoContent();
+            return result.IsFailure ? Results.BadRequest(result.Error) : Results.NoContent();
         })
         .WithName("UpdateTicketStatus")
         .WithTags("Tickets")

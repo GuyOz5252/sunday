@@ -1,7 +1,6 @@
 using DotResults;
 using Sunday.Application.Abstracts;
 using Sunday.Core.Abstracts;
-using Sunday.Core.DomainEvents;
 
 namespace Sunday.Application.WorkSessions.Stop;
 

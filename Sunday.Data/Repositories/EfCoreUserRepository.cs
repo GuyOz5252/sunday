@@ -1,7 +1,6 @@
 using DotResults;
 using Microsoft.EntityFrameworkCore;
 using Sunday.Core.Abstracts;
-using Sunday.Core.DomainEvents;
 using Sunday.Core.Models;
 
 namespace Sunday.Data.Repositories;

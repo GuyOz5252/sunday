@@ -12,7 +12,6 @@ using Sunday.Application.Tickets.UpdateStatus;
 using Sunday.Application.WorkSessions.Start;
 using Sunday.Application.WorkSessions.Stop;
 using Sunday.Core.Abstracts;
-using Sunday.Core.DomainEvents;
 using Sunday.Data;
 using Sunday.Data.Repositories;
 using Sunday.Extensions;
