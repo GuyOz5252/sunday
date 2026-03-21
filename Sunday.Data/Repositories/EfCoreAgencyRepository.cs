@@ -14,10 +14,10 @@ public class EfCoreAgencyRepository : IAgencyRepository
         _context = context;
     }
 
-    public System.Threading.Tasks.Task<string> CreateAgencyAsync(Agency agency, CancellationToken cancellationToken = default)
+    public Task<string> CreateAgencyAsync(Agency agency, CancellationToken cancellationToken = default)
     {
         _context.Agencies.Add(agency);
-        return System.Threading.Tasks.Task.FromResult(agency.Id);
+        return Task.FromResult(agency.Id);
     }
 
     public async Task<Result<Agency>> GetAsync(string id, CancellationToken cancellationToken = default)

@@ -1,16 +1,16 @@
-using Sunday.Core.DomainEvents.Abstract;
+using Sunday.Core.Events.Abstract;
 
 namespace Sunday.Core.Models;
 
 public abstract class AggregateRoot
 {
-    private readonly List<DomainEventBase> _domainEvents = [];
+    private readonly List<EventBase> _domainEvents = [];
     
-    public IReadOnlyList<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyList<EventBase> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected void Raise(DomainEventBase domainEvent)
+    protected void Raise(EventBase @event)
     {
-        _domainEvents.Add(domainEvent);
+        _domainEvents.Add(@event);
     }
 
     public void ClearDomainEvents()

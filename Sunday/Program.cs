@@ -50,11 +50,9 @@ builder.Services.AddScoped<ICommandHandler<StartWorkSessionCommand, string>, Sta
 builder.Services.AddScoped<ICommandHandler<StopWorkSessionCommand>, StopWorkSessionCommandHandler>();
 
 builder.Services.Decorate(typeof(ICommandHandler<>), typeof(ValidationCommandHandlerDecorator<>));
-builder.Services.Decorate(typeof(ICommandHandler<>), typeof(TransactionCommandHandlerDecorator<>));
 builder.Services.Decorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
 
 builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationCommandHandlerDecorator<,>));
-builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(TransactionCommandHandlerDecorator<,>));
 builder.Services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingCommandHandlerDecorator<,>));
 
 builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
