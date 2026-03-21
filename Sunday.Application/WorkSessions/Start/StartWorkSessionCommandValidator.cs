@@ -6,10 +6,10 @@ public class StartWorkSessionCommandValidator : AbstractValidator<StartWorkSessi
 {
     public StartWorkSessionCommandValidator()
     {
-        RuleFor(x => x.TicketId).NotEmpty();
-        RuleFor(x => x.UserId).NotEmpty();
-        RuleFor(x => x.Description)
+        RuleFor(command => command.TicketId).NotEmpty();
+        RuleFor(command => command.UserId).NotEmpty();
+        RuleFor(command => command.Description)
             .MaximumLength(1000)
-            .When(x => x.Description is not null);
+            .When(command => command.Description is not null);
     }
 }

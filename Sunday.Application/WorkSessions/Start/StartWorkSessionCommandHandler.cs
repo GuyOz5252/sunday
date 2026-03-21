@@ -54,11 +54,6 @@ public class StartWorkSessionCommandHandler : ICommandHandler<StartWorkSessionCo
         }
 
         var commitResult = await _unitOfWork.CommitAsync(cancellationToken);
-        if (commitResult.IsFailure)
-        {
-            return Result.Failure<string>(commitResult.Error);
-        }
-
-        return Result.Success(session.Id);
+        return commitResult.IsFailure ? Result.Failure<string>(commitResult.Error) : Result.Success(session.Id);
     }
 }
