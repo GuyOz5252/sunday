@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,9 +24,8 @@ public class CreateTicketEndpoint : IEndpoint
 
             var command = new CreateTicketCommand(
                 agencyId,
-                request.ClientId,
-                request.BrandId,
                 request.CampaignId,
+                request.BoardId,
                 request.Title,
                 request.Brief,
                 userId,
@@ -42,9 +41,8 @@ public class CreateTicketEndpoint : IEndpoint
 }
 
 public record CreateTicketRequest(
-    string ClientId,
-    string? BrandId,
-    string? CampaignId,
+    string CampaignId,
+    string BoardId,
     string Title,
     string Brief,
     DateTime? DueDate = null);

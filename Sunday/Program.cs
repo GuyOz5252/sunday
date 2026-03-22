@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Sunday.Api.Endpoints.Abstract;
@@ -15,6 +15,7 @@ using Sunday.Core.Abstract;
 using Sunday.Data;
 using Sunday.Data.Repositories;
 using Sunday.Extensions;
+using Sunday;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddEndpoints(typeof(IEndpoint).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<CreateTicketCommand>();
 builder.Services.AddScoped<IAgencyRepository, EfCoreAgencyRepository>();
+builder.Services.AddScoped<IBoardRepository, EfCoreBoardRepository>();
 builder.Services.AddScoped<ITicketRepository, EfCoreTicketRepository>();
 builder.Services.AddScoped<IClientRepository, EfCoreClientRepository>();
 builder.Services.AddScoped<IUserRepository, EfCoreUserRepository>();
@@ -77,6 +79,7 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await dbContext.Database.MigrateAsync();
+    await DomainSeed.EnsureDefaultBusinessUnitAndBoardAsync(dbContext);
 }
 
 await app.RunAsync();

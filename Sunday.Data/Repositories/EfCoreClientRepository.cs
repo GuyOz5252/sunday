@@ -1,4 +1,4 @@
-﻿using DotResults;
+using DotResults;
 using Microsoft.EntityFrameworkCore;
 using Sunday.Core.Abstract;
 using Sunday.Core.Models;
@@ -73,6 +73,7 @@ public class EfCoreClientRepository : IClientRepository
     public async Task<Result<Campaign>> GetCampaignAsync(string id, CancellationToken cancellationToken = default)
     {
         var campaign = await _context.Campaigns
+            .Include(c => c.Brand)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
         return campaign is null

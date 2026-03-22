@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sunday.Core.Models;
 using DotResults;
 using Sunday.Core.Abstract;
@@ -7,6 +7,8 @@ namespace Sunday.Data;
 
 public class ApplicationDbContext : DbContext, IUnitOfWork
 {
+    public DbSet<BusinessUnit> BusinessUnits { get; init; }
+    public DbSet<Board> Boards { get; init; }
     public DbSet<Agency> Agencies { get; init; }
     public DbSet<User> Users { get; init; }
     public DbSet<Client> Clients { get; init; }
@@ -16,7 +18,8 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<TicketAssignment> TicketAssignments { get; init; }
     public DbSet<TicketWatcher> TicketWatchers { get; init; }
     public DbSet<WorkSession> WorkSessions { get; init; }
-    
+    public DbSet<TicketComment> TicketComments { get; init; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
@@ -36,6 +39,28 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BusinessUnit>(builder =>
+        {
+            builder.HasKey(bu => bu.Id);
+            builder.Property(bu => bu.Id).ValueGeneratedOnAdd();
+            builder.Property(bu => bu.Name).IsRequired().HasMaxLength(200);
+            builder.Property(bu => bu.Slug).IsRequired().HasMaxLength(80);
+            builder.HasIndex(bu => bu.Slug).IsUnique();
+        });
+
+        modelBuilder.Entity<Board>(builder =>
+        {
+            builder.HasKey(b => b.Id);
+            builder.Property(b => b.Id).ValueGeneratedOnAdd();
+            builder.Property(b => b.Name).IsRequired().HasMaxLength(150);
+            builder.Property(b => b.Slug).IsRequired().HasMaxLength(80);
+            builder.HasOne<BusinessUnit>()
+                .WithMany()
+                .HasForeignKey(b => b.BusinessUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(b => new { b.BusinessUnitId, b.Slug }).IsUnique();
+        });
+
         modelBuilder.Entity<Agency>(builder =>
         {
             builder.HasKey(a => a.Id);
@@ -43,6 +68,10 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
             builder.Property(a => a.Name).IsRequired().HasMaxLength(100);
             builder.Property(a => a.Slug).IsRequired().HasMaxLength(50);
             builder.HasIndex(a => a.Slug).IsUnique();
+            builder.HasOne<BusinessUnit>()
+                .WithMany()
+                .HasForeignKey(a => a.BusinessUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<User>(builder =>
@@ -55,8 +84,8 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
                 r => string.Join(',', r),
                 r => r.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Enum.Parse<Role>).ToList());
 
-            builder.HasOne(u => u.Agency)
-                .WithMany(a => a.Users)
+            builder.HasOne<Agency>()
+                .WithMany()
                 .HasForeignKey(u => u.AgencyId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -67,12 +96,12 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
             builder.Property(c => c.Id).ValueGeneratedOnAdd();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
             
-            builder.HasOne(c => c.Agency)
-                .WithMany(a => a.Clients)
+            builder.HasOne<Agency>()
+                .WithMany()
                 .HasForeignKey(c => c.AgencyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(c => c.AccountManager)
+            builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(c => c.AccountManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
@@ -110,14 +139,24 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
             builder.Property(t => t.Brief).IsRequired();
             builder.Property(t => t.Status).HasConversion<string>();
 
-            builder.HasOne(t => t.Agency)
+            builder.HasOne<Agency>()
                 .WithMany()
                 .HasForeignKey(t => t.AgencyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(t => t.Client)
+            builder.HasOne<Client>()
                 .WithMany()
                 .HasForeignKey(t => t.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<Campaign>()
+                .WithMany()
+                .HasForeignKey(t => t.CampaignId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<Board>()
+                .WithMany()
+                .HasForeignKey(t => t.BoardId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Ignore(t => t.DomainEvents);
@@ -134,7 +173,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
                 .HasForeignKey(tc => tc.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(tc => tc.Author)
+            builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(tc => tc.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -151,7 +190,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
                 .HasForeignKey(ta => ta.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(ta => ta.User)
+            builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(ta => ta.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -166,7 +205,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
                 .HasForeignKey(tw => tw.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(tw => tw.User)
+            builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(tw => tw.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -178,11 +217,11 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
             builder.Property(te => te.Id).ValueGeneratedOnAdd();
 
             builder.HasOne(te => te.Ticket)
-                .WithMany()
+                .WithMany(t => t.WorkSessions)
                 .HasForeignKey(te => te.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(te => te.User)
+            builder.HasOne<User>()
                 .WithMany()
                 .HasForeignKey(te => te.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

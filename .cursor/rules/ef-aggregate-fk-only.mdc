@@ -1,0 +1,13 @@
+---
+description: Cross-aggregate references use FKs only; no EF navigation properties between aggregates
+globs: **/*.cs
+alwaysApply: false
+---
+
+# EF Core: aggregates reference each other by FK only
+
+**Between different aggregates**, entity types expose **foreign key properties** only — **no** navigation properties to other aggregate roots (or their entities). Load related data explicitly in repositories/queries when needed (`Include` from `DbSet` entry points, joins, or separate loads).
+
+**Within a single aggregate**, navigations from the **aggregate root to owned/child entities** are allowed (e.g. `Ticket` → `Assignments`, `Watchers`, `Comments`, `WorkSessions`; `Client` → `Brands`; `Brand` → `Campaigns`).
+
+Configure relationships in `OnModelCreating` with `HasOne<TOther>().WithMany().HasForeignKey(...)` when there is no navigation on the dependent side.

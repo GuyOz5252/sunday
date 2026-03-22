@@ -1,9 +1,8 @@
 namespace Sunday.Core.Models;
 
-public class Agency
+public class BusinessUnit
 {
     public required string Id { get; init; }
-    public required string BusinessUnitId { get; init; }
     public required string Name { get; init; }
     public required string Slug { get; init; }
     public bool IsActive { get; set; } = true;
