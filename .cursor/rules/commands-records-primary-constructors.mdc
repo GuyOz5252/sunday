@@ -1,0 +1,36 @@
+---
+description: Commands and records may use C# primary constructors
+globs: **/*.cs
+alwaysApply: false
+---
+
+# Primary constructors for commands and records
+
+**Commands and records** (including request/response DTO records, MediatR-style commands, validators that only capture parameters) **may use primary constructors** when they are simple data carriers.
+
+For other types (services, handlers, endpoints, entities with behavior), **prefer explicit constructors** or avoid primary constructors unless the team’s general style rule applies.
+
+## Examples
+
+```csharp
+// ✅ OK — command / record-style type
+public record CreateBrandCommand(string Name, string ClientId);
+
+public class CreateBrandCommandValidator : AbstractValidator<CreateBrandCommand>
+{
+    public CreateBrandCommandValidator() { /* FluentValidation rules */ }
+}
+```
+
+```csharp
+// Prefer a normal constructor for handlers and other non-DTO types (no primary constructor)
+public class CreateBrandCommandHandler : ICommandHandler<CreateBrandCommand, string>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CreateBrandCommandHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+}
+```

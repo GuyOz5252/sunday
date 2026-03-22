@@ -1,0 +1,23 @@
+---
+description: Keep layers clean — thin endpoints, logic in handlers, no repositories in handlers
+globs: **/*.cs
+alwaysApply: false
+---
+
+# Clean layer separation
+
+Preserve **vertical boundaries**: API maps HTTP to application use cases; application owns orchestration and business rules; persistence stays behind infrastructure abstractions.
+
+## Endpoints (`Sunday.Api`)
+
+- **No business logic** in endpoint classes: bind route/query/body to a command, call the **command handler**, map the result to HTTP (status, headers, body).
+- Do **not** inject or use **repositories**, `DbContext`, or domain rules in endpoints — only handlers (and minimal mapping/authorization wiring as appropriate).
+
+## Command and query handlers (`Sunday.Application`)
+
+- **Business logic belongs here**, not in endpoints.
+- Do **not** inject **`I*Repository`** (or concrete repository types) into handlers. Expose data access through narrower application or domain abstractions instead of repository interfaces on the handler.
+
+## When adding code
+
+Prefer extending the correct layer over leaking concerns upward or downward.
