@@ -1,7 +1,7 @@
 using DotResults;
 using Sunday.Core.Models;
 
-namespace Sunday.Core.Abstracts;
+namespace Sunday.Core.Abstract;
 
 public interface IUserRepository
 {

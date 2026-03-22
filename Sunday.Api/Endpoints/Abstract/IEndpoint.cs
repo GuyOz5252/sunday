@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Routing;
 
-namespace Sunday.Api.Endpoints.Abstracts;
+namespace Sunday.Api.Endpoints.Abstract;
 
 public interface IEndpoint
 {

@@ -1,6 +1,6 @@
 using DotResults;
 
-namespace Sunday.Core.Abstracts;
+namespace Sunday.Core.Abstract;
 
 public interface IUnitOfWork
 {

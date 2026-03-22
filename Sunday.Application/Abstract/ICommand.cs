@@ -1,4 +1,4 @@
-namespace Sunday.Application.Abstracts;
+namespace Sunday.Application.Abstract;
 
 public interface ICommand;
 

@@ -1,4 +1,4 @@
-using Sunday.Application.Abstracts;
+﻿using Sunday.Application.Abstract;
 using Sunday.Core.Models;
 
 namespace Sunday.Application.Tickets.UpdateStatus;

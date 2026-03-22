@@ -1,9 +1,9 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Sunday.Api.Endpoints.Abstracts;
-using Sunday.Application.Abstracts;
+using Sunday.Api.Endpoints.Abstract;
+using Sunday.Application.Abstract;
 using Sunday.Application.WorkSessions.Stop;
 
 namespace Sunday.Api.Endpoints.WorkSessions;

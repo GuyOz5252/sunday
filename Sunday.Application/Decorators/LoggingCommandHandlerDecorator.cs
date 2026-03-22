@@ -1,6 +1,6 @@
-using DotResults;
+﻿using DotResults;
 using Microsoft.Extensions.Logging;
-using Sunday.Application.Abstracts;
+using Sunday.Application.Abstract;
 
 namespace Sunday.Application.Decorators;
 

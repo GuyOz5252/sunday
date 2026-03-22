@@ -1,6 +1,6 @@
-using DotResults;
-using Sunday.Application.Abstracts;
-using Sunday.Core.Abstracts;
+﻿using DotResults;
+using Sunday.Application.Abstract;
+using Sunday.Core.Abstract;
 
 namespace Sunday.Application.WorkSessions.Stop;
 

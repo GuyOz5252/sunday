@@ -1,6 +1,6 @@
-using DotResults;
+﻿using DotResults;
 using Microsoft.EntityFrameworkCore;
-using Sunday.Core.Abstracts;
+using Sunday.Core.Abstract;
 using Sunday.Core.Models;
 
 namespace Sunday.Data.Repositories;

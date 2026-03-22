@@ -1,23 +1,22 @@
 ---
-description: Keep layers clean — thin endpoints, logic in handlers, no repositories in handlers
+description: Thin endpoints that delegate to command handlers; business logic in handlers
 globs: **/*.cs
 alwaysApply: false
 ---
 
 # Clean layer separation
 
-Preserve **vertical boundaries**: API maps HTTP to application use cases; application owns orchestration and business rules; persistence stays behind infrastructure abstractions.
+**Endpoints** map HTTP to commands and call **`ICommandHandler`** implementations. **Do not** introduce separate “gateway” or façade types for the same flow — handlers are the application entry from the API.
 
 ## Endpoints (`Sunday.Api`)
 
-- **No business logic** in endpoint classes: bind route/query/body to a command, call the **command handler**, map the result to HTTP (status, headers, body).
-- Do **not** inject or use **repositories**, `DbContext`, or domain rules in endpoints — only handlers (and minimal mapping/authorization wiring as appropriate).
+- **No business rules** in endpoint classes: bind route/query/body, optionally load resources needed for **authorization** (e.g. ticket for `IAuthorizationService`), build the command, **`await handler.HandleAsync`**, map `Result` to HTTP.
+- **Do not** put domain orchestration or validation logic in endpoints — that belongs in **command handlers**.
 
-## Command and query handlers (`Sunday.Application`)
+## Command handlers (`Sunday.Application`)
 
-- **Business logic belongs here**, not in endpoints.
-- Do **not** inject **`I*Repository`** (or concrete repository types) into handlers. Expose data access through narrower application or domain abstractions instead of repository interfaces on the handler.
+- **Business logic belongs here.** Use **`I*Repository`**, **`IUnitOfWork`**, and other dependencies as needed.
 
 ## When adding code
 
-Prefer extending the correct layer over leaking concerns upward or downward.
+Keep endpoints thin; extend handlers and domain code instead of adding parallel abstraction layers for the same use case.

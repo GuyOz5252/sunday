@@ -1,4 +1,4 @@
-using Sunday.Application.Abstracts;
+﻿using Sunday.Application.Abstract;
 
 namespace Sunday.Application.Tickets.Create;
 

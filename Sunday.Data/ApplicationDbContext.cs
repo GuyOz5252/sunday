@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Sunday.Core.Models;
 using DotResults;
-using Sunday.Core.Abstracts;
+using Sunday.Core.Abstract;
 
 namespace Sunday.Data;
 

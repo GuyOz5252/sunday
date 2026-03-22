@@ -1,6 +1,6 @@
 using DotResults;
 
-namespace Sunday.Application.Abstracts;
+namespace Sunday.Application.Abstract;
 
 public interface ICommandHandler<in TCommand> where TCommand : ICommand
 {
